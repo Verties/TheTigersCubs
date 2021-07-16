@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.7.6;
-import "./Interfaces/IERC165.sol";
+import "./IERC165.sol";
 
 /**
  * @dev Implementation of the {IERC165} interface.
