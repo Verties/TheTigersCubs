@@ -10,12 +10,12 @@ import "./ERC721.sol";
  */
 contract TheTigersGuild is ERC721, Ownable {
     string _baseTokenURI;
-    uint256 public _tigerPrice = 8000000000000000000;   // .08 ETH
+    uint256 public _tigerPrice = 80000000000000000;   // .08 ETH
     bool public _saleIsActive = false;
     // Reserve 528 Tigers for team - Giveaways/Prizes/Presales etc
     uint public _tigerReserve = 528;
 
-    constructor(string memory baseURI) ERC721("The Tiger's Guild", "TTG") {
+    constructor(string memory baseURI) ERC721("The Tigers Guild", "TTG") {
         setBaseURI(baseURI);
     }
     function withdraw() public onlyOwner {
