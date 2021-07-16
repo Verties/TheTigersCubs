@@ -9,12 +9,15 @@ import "./ERC721.sol";
  * 528 of the tigers are reserved for presale and promo purposes.
  */
 contract TheTigersGuild is ERC721, Ownable {
+    string _baseTokenURI;
     uint256 public _tigerPrice = 8000000000000000000;   // .08 ETH
     bool public _saleIsActive = false;
     // Reserve 528 Tigers for team - Giveaways/Prizes/Presales etc
     uint public _tigerReserve = 528;
 
-    constructor() ERC721("The Tiger's Guild", "TTG") { }
+    constructor(string memory baseURI) ERC721("The Tiger's Guild", "TTG") {
+        setBaseURI(baseURI);
+    }
     function withdraw() public onlyOwner {
         uint balance = address(this).balance;
         msg.sender.transfer(balance);
@@ -53,11 +56,8 @@ contract TheTigersGuild is ERC721, Ownable {
     function flipSaleState() public onlyOwner {
         _saleIsActive = !_saleIsActive;
     }
-    function setTokenURI(uint256 _tokenId, string memory _uri) public onlyOwner() {
-        _setTokenURI(_tokenId, _uri);
-    }
-    function getTokenURI(uint256 _tokenId, string memory _uri) public onlyOwner() {
-        _setTokenURI(_tokenId, _uri);
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _baseTokenURI = baseURI;
     }
     // Might wanna adjust price later on.
     function setPrice(uint256 _newPrice) public onlyOwner() {
