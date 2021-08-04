@@ -4,20 +4,20 @@ import "./Ownable.sol";
 import "./ERC721.sol";
 
 /**
- * @dev Contract module defining the Tiger's Guild ERC721 NFT Token.
- * There is a total supply of 8888 tigers to be minted, each tiger cost .08 ETH.
- * 528 of the tigers are reserved for presale and promo purposes.
+ * @dev Contract module defining the Blockchain Hamsters Squad Tiger's Guild ERC721 NFT Token.
+ * There is a total supply of 8000 TBHS to be minted, each tiger cost .01 ETH.
+ * 500 of the TBHS are reserved for presale and promo purposes.
  */
-contract TheTigersGuild is ERC721, Ownable {
+contract TheBlockchainHamstersSquad is ERC721, Ownable {
     using Strings for uint256;
 
     string _baseTokenURI;
-    uint256 public _tigerPrice = 80000000000000000;   // .08 ETH
+    uint256 public _tigerPrice = 10000000000000000;   // .01 ETH
     bool public _saleIsActive = false;
-    // Reserve 528 Tigers for team - Giveaways/Prizes/Presales etc
-    uint public _tigerReserve = 528;
+    // Reserve 500 Tokens
+    uint public _tigerReserve = 500;
 
-    constructor(string memory baseURI) ERC721("TheTigersGuild", "TTGD") {
+    constructor(string memory baseURI) ERC721("TheBlockchainHamstersSquad", "TBHS") {
         setBaseURI(baseURI);
     }
     function withdraw() public onlyOwner {
@@ -25,15 +25,15 @@ contract TheTigersGuild is ERC721, Ownable {
         msg.sender.transfer(balance);
     }
     /** 
-     * Mint a number of tigers straight in target wallet.
+     * Mint a number of TBHS straight in target wallet.
      * @param _to: The target wallet address, make sure it's the correct wallet.
      * @param _numberOfTokens: The number of tokens to mint.
      * @dev This function can only be called by the contract owner as it is a free mint.
      */
     function mintFreeTiger(address _to, uint _numberOfTokens) public onlyOwner {
         uint totalSupply = totalSupply();
-        require(_numberOfTokens <= _tigerReserve, "Not enough Tigers left in reserve");
-        require(totalSupply + _numberOfTokens < 8889, "Purchase would exceed max supply of Tigers");
+        require(_numberOfTokens <= _tigerReserve, "Not enough TBHS left in reserve");
+        require(totalSupply + _numberOfTokens < 8001, "Purchase would exceed max supply of TBHS");
         for(uint i = 0; i < _numberOfTokens; i++) {
             uint mintIndex = totalSupply + i;
             _safeMint(_to, mintIndex);
@@ -41,14 +41,14 @@ contract TheTigersGuild is ERC721, Ownable {
         _tigerReserve -= _numberOfTokens;
     }
     /** 
-     * Mint a number of tigers straight in the caller's wallet.
+     * Mint a number of TBHS straight in the caller's wallet.
      * @param _numberOfTokens: The number of tokens to mint.
      */
     function mintTiger(uint _numberOfTokens) public payable {
         uint totalSupply = totalSupply();
         require(_saleIsActive, "Sale must be active to mint a Tiger");
         require(_numberOfTokens < 21, "Can only mint 20 tokens at a time");
-        require(totalSupply + _numberOfTokens + _tigerReserve < 8889, "Purchase would exceed max supply of Tigers");
+        require(totalSupply + _numberOfTokens + _tigerReserve < 8001, "Purchase would exceed max supply of TBHS");
         require(msg.value >= _tigerPrice * _numberOfTokens, "Ether value sent is not correct");
         for(uint i = 0; i < _numberOfTokens; i++) {
             uint mintIndex = totalSupply + i;
