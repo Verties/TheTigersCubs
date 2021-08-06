@@ -6,15 +6,20 @@ import "./ERC721.sol";
 /**
  * @dev Contract module defining blockchain Hamster's Squad ERC721 NFT Token.
  * There is a total supply of 8000 hamsters to be minted, each hamster cost .01 ETH.
- * 528 of the hamsters are reserved for presale and promo purposes.
+ * 500 of the hamsters are reserved for presale and promo purposes.
  */
 contract BlockchainHamstersSquad is ERC721, Ownable {
-    uint256 public _hamsterPrice = 1000000000000000000;   // .01 ETH
+    using Strings for uint256;
+
+    string _baseTokenURI;
+    uint256 public _hamsterPrice = 10000000000000000;   // .01 ETH
     bool public _saleIsActive = false;
     // Reserve 500 Hamsters for team - Giveaways/Prizes/Presales etc
     uint public _hamsterReserve = 500;
 
-    constructor() ERC721("Blockchain Hamster's Squad", "BHS") { }
+    constructor(string memory baseURI) ERC721("BlockchainHamstersSquad", "BHS") {
+        setBaseURI(baseURI);
+    }
     function withdraw() public onlyOwner {
         uint balance = address(this).balance;
         msg.sender.transfer(balance);
@@ -53,18 +58,21 @@ contract BlockchainHamstersSquad is ERC721, Ownable {
     function flipSaleState() public onlyOwner {
         _saleIsActive = !_saleIsActive;
     }
-    function setTokenURI(uint256 _tokenId, string memory _uri) public onlyOwner() {
-        _setTokenURI(_tokenId, _uri);
-    }
-    function getTokenURI(uint256 _tokenId, string memory _uri) public onlyOwner() {
-        _setTokenURI(_tokenId, _uri);
+    function setBaseURI(string memory baseURI) public onlyOwner {
+        _baseTokenURI = baseURI;
     }
     // Might wanna adjust price later on.
     function setPrice(uint256 _newPrice) public onlyOwner() {
         _hamsterPrice = _newPrice;
     }
+    function getBaseURI() public view returns(string memory) {
+        return _baseTokenURI;
+    }
     function getPrice() public view returns(uint256){
         return _hamsterPrice;
+    }
+    function tokenURI(uint256 tokenId) public override view returns(string memory) {
+        return string(abi.encodePacked(_baseTokenURI, tokenId.toString()));
     }
     function tokensOfOwner(address _owner) external view returns(uint256[] memory ) {
         uint256 tokenCount = balanceOf(_owner);

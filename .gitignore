@@ -2,3 +2,4 @@
 build/
 .infura
 .secret
+.config.infura.json
