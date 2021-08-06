@@ -17,12 +17,22 @@
  * phrase from a file you've .gitignored so it doesn't accidentally become public.
  *
  */
+const readline = require('readline');
+const path     = require('path');
+// const ospath   = require('ospath');
+const fs       = require('fs');
 
-const fs = require('fs');
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 
-const infuraKey = "https://mainnet.infura.io/v3/" + fs.readFileSync(".infura").toString().trim();
-const mnemonic = fs.readFileSync(".secret").toString().trim();
+const filePath = path.resolve(__dirname, 'config.infura.json');
+
+if (!fs.existsSync(filePath)) {
+  throw 'Run `node configurate.js`';
+}
+
+const config = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+const mnemonic = config.projectSecret;
+
 
 module.exports = {
   /**
@@ -36,12 +46,26 @@ module.exports = {
    */
 
   networks: {
+    ropsten: {
+      provider: function() {
+        const link = `https://ropsten.infura.io/v3/${config.projectId}`;
+        console.log("link:", link)
+        return new HDWalletProvider(mnemonic, link)
+      },
+      network_id: 3,
+      gas: 4000000,
+      gasPrice: 21000000000
+    },
     mainnet: {
       provider: function () {
+        const link = `https://mainnet.infura.io/v3/${config.projectId}`;
+        console.log("link:", link)
         // Setting the provider with the Infura Rinkeby address and Token
-        return new HDWalletProvider(mnemonic, )
+        return new HDWalletProvider(mnemonic, link)
       },
-      network_id: "1"
+      network_id: "1",
+      gas: 4000000,
+      gasPrice: 21000000000
     },
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
