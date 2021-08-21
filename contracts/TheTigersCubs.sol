@@ -15,8 +15,8 @@ contract TheTigersCubs is ERC721, Ownable {
     string _baseMetadataUri;
     address _tigersAddress;
     bool public _saleIsActive = false;
-    uint public _cubsSupply = 4444;
-    mapping(uint => uint) _adoptedCubs;
+    uint256 public _cubsSupply = 4444;
+    mapping(uint256 => uint256) _adoptedCubs;
 
     constructor(string memory baseMetadataUri, string memory tigersAddress) ERC721("TheTigersCubs", "TTC") {
         setTigersAddress(tigersAddress);
@@ -27,7 +27,7 @@ contract TheTigersCubs is ERC721, Ownable {
         _tigersAddress = tigersAddress;
     }
 
-    function getTigersAddress() public view returns (address memory) {
+    function getTigersAddress() public view returns (address) {
         return _tigersAddress;
     }
 
@@ -35,11 +35,11 @@ contract TheTigersCubs is ERC721, Ownable {
         _baseMetadataUri = baseMetadataUri;
     }
 
-    function getBaseMetadataUri() public view returns (string memory) {
+    function getBaseMetadataUri() public view returns (string) {
         return _baseMetadataUri;
     }
 
-    function tokenURI(uint256 tokenId) public override view returns (string memory) {
+    function tokenURI(uint256 memory tokenId) public override view returns (string) {
         return string(abi.encodePacked(_baseMetadataUri, tokenId.toString()));
     }
 
@@ -47,11 +47,11 @@ contract TheTigersCubs is ERC721, Ownable {
         _saleIsActive = !_saleIsActive;
     }
 
-    function getCubIdByTigerId(tigerId) public view returns (uint memory) {
+    function getCubIdByTigerId(uint256 memory tigerId) public view returns (uint256) {
         return _adoptedCubs[tigerId];
     }
     
-    function adopt(uint tigerId) public {
+    function adopt(uint256 tigerId) public {
         // 1. Проверка на то, открыта ли продажа
         require(_saleIsActive, "Sale must be active to adpot a cub");
         
@@ -63,10 +63,10 @@ contract TheTigersCubs is ERC721, Ownable {
         require(_adoptedCubs[tigerId] == 0, "Cub for tiger with id tigerId is already adopted");
 
         // 4. Проверка на то, не распроданы ли все тигрята
-        uint totalSupply = totalSupply();
+        uint256 totalSupply = totalSupply();
         require(totalSupply <= _cubsSupply - 1, "Purchase would exceed max supply of cubs");
 
-        uint cubId = totalSupply + 1;
+        uint256 cubId = totalSupply + 1;
         _safeMint(msg.sender, cubId);
         _adoptedCubs[tigerId] = cubId;
     }
