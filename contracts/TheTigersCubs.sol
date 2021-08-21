@@ -5,7 +5,7 @@ import "./ERC721.sol";
 
 
 contract TheTigersGuild {
-    function ownerOf(uint256 tokenId) public view virtual override returns (address);
+    function ownerOf(uint256 tokenId) public view returns (address) {}
 }
 
 
@@ -18,12 +18,12 @@ contract TheTigersCubs is ERC721, Ownable {
     uint256 public _cubsSupply = 4444;
     mapping(uint256 => uint256) _adoptedCubs;
 
-    constructor(string memory baseMetadataUri, string memory tigersAddress) ERC721("TheTigersCubs", "TTC") {
+    constructor(string memory baseMetadataUri, address tigersAddress) ERC721("TheTigersCubs", "TTC") {
         setTigersAddress(tigersAddress);
         setBaseMetadataUri(baseMetadataUri);
     }
 
-    function setTigersAddress(address memory tigersAddress) public onlyOwner {
+    function setTigersAddress(address tigersAddress) public onlyOwner {
         _tigersAddress = tigersAddress;
     }
 
@@ -35,11 +35,11 @@ contract TheTigersCubs is ERC721, Ownable {
         _baseMetadataUri = baseMetadataUri;
     }
 
-    function getBaseMetadataUri() public view returns (string) {
+    function getBaseMetadataUri() public view returns (string memory) {
         return _baseMetadataUri;
     }
 
-    function tokenURI(uint256 memory tokenId) public override view returns (string) {
+    function tokenURI(uint256 tokenId) public override view returns (string memory) {
         return string(abi.encodePacked(_baseMetadataUri, tokenId.toString()));
     }
 
@@ -47,7 +47,7 @@ contract TheTigersCubs is ERC721, Ownable {
         _saleIsActive = !_saleIsActive;
     }
 
-    function getCubIdByTigerId(uint256 memory tigerId) public view returns (uint256) {
+    function getCubIdByTigerId(uint256 tigerId) public view returns (uint256) {
         return _adoptedCubs[tigerId];
     }
     
@@ -71,7 +71,7 @@ contract TheTigersCubs is ERC721, Ownable {
         _adoptedCubs[tigerId] = cubId;
     }
 
-    function tokensOfOwner(address _owner) external view returns (uint256[] memory ) {
+    function tokensOfOwner(address _owner) external view returns (uint256[] memory) {
         uint256 tokenCount = balanceOf(_owner);
         if (tokenCount == 0) {
             // Return an empty array
@@ -83,5 +83,10 @@ contract TheTigersCubs is ERC721, Ownable {
             }
             return result;
         }
+    }
+    
+    function withdraw() public onlyOwner {
+        uint balance = address(this).balance;
+        msg.sender.transfer(balance);
     }
 }
