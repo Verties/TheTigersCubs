@@ -47,7 +47,7 @@ contract TheTigersCubs is ERC721, Ownable {
         _saleIsActive = !_saleIsActive;
     }
 
-    function getCubIdByTigetId(tigerId) public view returns (uid memory) {
+    function getCubIdByTigetId(tigerId) public view returns (uint memory) {
         return _adoptedCubs[tigerId];
     }
     
