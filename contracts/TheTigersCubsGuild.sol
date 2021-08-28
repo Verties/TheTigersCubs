@@ -11,7 +11,7 @@ interface TheTigersGuild {
 }
 
 
-contract TheTigersCubs is ERC721, Ownable {
+contract TheTigersCubsGuild is ERC721, Ownable {
     using Strings for uint256;
 
     string _baseMetadataUri;
@@ -20,7 +20,7 @@ contract TheTigersCubs is ERC721, Ownable {
     uint256 public _cubsSupply = 4444;
     mapping(uint256 => uint256) _adoptedCubs;
 
-    constructor(string memory baseMetadataUri) ERC721("TheCubsGuild", "TCG") {
+    constructor(string memory baseMetadataUri) ERC721("TheTigersCubsGuild", "TTCG") {
         setBaseMetadataUri(baseMetadataUri);
     }
 
@@ -54,7 +54,7 @@ contract TheTigersCubs is ERC721, Ownable {
         // 4. Проверка на то, не распроданы ли все тигрята
         uint256 totalSupply = totalSupply();
         uint256 cubId = totalSupply + 1;
-        require(cubId <= totalSupply, "Purchase would exceed max supply of cubs");
+        require(cubId <= _cubsSupply, "Purchase would exceed max supply of cubs");
 
         _safeMint(msg.sender, cubId);
         _adoptedCubs[tigerId] = cubId;
