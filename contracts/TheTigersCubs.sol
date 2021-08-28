@@ -20,7 +20,7 @@ contract TheTigersCubs is ERC721, Ownable {
     uint256 public _cubsSupply = 4444;
     mapping(uint256 => uint256) _adoptedCubs;
 
-    constructor(string memory baseMetadataUri) ERC721("TheTigersCubs", "TTC") {
+    constructor(string memory baseMetadataUri) ERC721("TheTigersCubsGuild", "TTCG") {
         setBaseMetadataUri(baseMetadataUri);
     }
 
@@ -40,30 +40,24 @@ contract TheTigersCubs is ERC721, Ownable {
         return _adoptedCubs[tigerId];
     }
     
-    function adoptCubs(uint256[] memory tigerIds) public {
+    function adoptCubs(uint256 tigerId) public {
         // 1. Проверка на то, открыта ли продажа
         require(_saleIsActive, "Sale must be active to adpot a cub");
 
+        // 2. Проверка на то, является ли msg.sender, владельцем тигра с id tigerId
+        address tigerOwner = TheTigersGuild(_tigersContract).ownerOf(tigerId);
+        require(msg.sender == tigerOwner, "msg.sender is not the owner of tiger with id tigerId");
+
+        // 3. Проверка на то, связан ли тигр с id tigerId с тигрёнком
+        require(_adoptedCubs[tigerId] == 0, "Cub for tiger with id tigerId is already adopted");
+
+        // 4. Проверка на то, не распроданы ли все тигрята
         uint256 totalSupply = totalSupply();
         uint256 cubId = totalSupply + 1;
+        require(cubId <= totalSupply, "Purchase would exceed max supply of cubs");
 
-        for (uint i = 0; i < tigerIds.length; i++) {
-            uint256 tigerId = tigerIds[i];
-            cubId += i;
-
-            // 2. Проверка на то, является ли msg.sender, владельцем тигра с id tigerId
-            address tigerOwner = TheTigersGuild(_tigersContract).ownerOf(tigerId);
-            require(msg.sender == tigerOwner, "msg.sender is not the owner of tiger with id tigerId");
-
-            // 3. Проверка на то, связан ли тигр с id tigerId с тигрёнком
-            require(_adoptedCubs[tigerId] == 0, "Cub for tiger with id tigerId is already adopted");
-
-            // 4. Проверка на то, не распроданы ли все тигрята
-            require(cubId <= totalSupply, "Purchase would exceed max supply of cubs");
-
-            _safeMint(msg.sender, cubId);
-            _adoptedCubs[tigerId] = cubId;
-        }
+        _safeMint(msg.sender, cubId);
+        _adoptedCubs[tigerId] = cubId;
     }
 
     function tokensOfOwner(address _owner) external view returns (uint256[] memory) {
