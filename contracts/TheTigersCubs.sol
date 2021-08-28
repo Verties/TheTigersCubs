@@ -20,7 +20,7 @@ contract TheTigersCubs is ERC721, Ownable {
     uint256 public _cubsSupply = 4444;
     mapping(uint256 => uint256) _adoptedCubs;
 
-    constructor(string memory baseMetadataUri) ERC721("TheTigersCubsGuild", "TTCG") {
+    constructor(string memory baseMetadataUri) ERC721("TheCubsGuild", "TCG") {
         setBaseMetadataUri(baseMetadataUri);
     }
 
