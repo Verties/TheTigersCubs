@@ -86,7 +86,7 @@ contract TheTigersGuildCubs is ERC721, Ownable {
 
         uint256 totalSupply = totalSupply();
 
-        for (uint256 i = 1; i < tigerIds.length + 1; i++) {
+        for (uint256 i = 1; i <= tigerIds.length; i++) {
             uint256 tigerId = tigerIds[i];
             uint256 cubId = totalSupply + i;
 
@@ -111,7 +111,7 @@ contract TheTigersGuildCubs is ERC721, Ownable {
 
         uint256 totalSupply = totalSupply();
 
-        for (uint256 i = 1; i < tigerIds.length + 1; i++) {
+        for (uint256 i = 1; i <= tigerIds.length; i++) {
             uint256 tigerId = tigerIds[i];
             uint256 cubId = totalSupply + i;
 
