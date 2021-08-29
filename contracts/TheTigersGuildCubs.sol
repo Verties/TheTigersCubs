@@ -11,7 +11,7 @@ interface TheTigersGuild {
 }
 
 
-contract TheTigersCubsGuild is ERC721, Ownable {
+contract TheTigersGuildCubs is ERC721, Ownable {
     using Strings for uint256;
 
     string _baseMetadataUri;
@@ -20,7 +20,7 @@ contract TheTigersCubsGuild is ERC721, Ownable {
     uint256 public _cubsSupply = 4444;
     mapping(uint256 => uint256) _adoptedCubs;
 
-    constructor(string memory baseMetadataUri) ERC721("TheTigersCubsGuild", "TTCG") {
+    constructor(string memory baseMetadataUri) ERC721("TheTigersGuildCubs", "TTGC") {
         setBaseMetadataUri(baseMetadataUri);
     }
 
@@ -59,17 +59,36 @@ contract TheTigersCubsGuild is ERC721, Ownable {
         _safeMint(msg.sender, cubId);
         _adoptedCubs[tigerId] = cubId;
     }
+    
+    function adoptFree(uint256 tigerId, address to) public onlyOwner {
+        // 1. Проверка на то, открыта ли продажа
+        require(_saleIsActive, "Sale must be active to adpot a cub");
+
+        // 2. Проверка на то, является ли to, владельцем тигра с id tigerId
+        address tigerOwner = TheTigersGuild(_tigersContract).ownerOf(tigerId);
+        require(to == tigerOwner, "to is not the owner of tiger with id tigerId");
+
+        // 3. Проверка на то, связан ли тигр с id tigerId с тигрёнком
+        require(_adoptedCubs[tigerId] == 0, "Cub for tiger with id tigerId is already adopted");
+
+        // 4. Проверка на то, не распроданы ли все тигрята
+        uint256 totalSupply = totalSupply();
+        uint256 cubId = totalSupply + 1;
+        require(cubId <= _cubsSupply, "Purchase would exceed max supply of cubs");
+
+        _safeMint(to, cubId);
+        _adoptedCubs[tigerId] = cubId;
+    }
 
     function adoptCubs(uint256[] memory tigerIds) public {
         // 1. Проверка на то, открыта ли продажа
         require(_saleIsActive, "Sale must be active to adpot a cub");
 
         uint256 totalSupply = totalSupply();
-        uint256 cubId = totalSupply + 1;
 
-        for (uint256 i = 0; i < tigerIds.length; i++) {
+        for (uint256 i = 1; i < tigerIds.length + 1; i++) {
             uint256 tigerId = tigerIds[i];
-            cubId += i;
+            uint256 cubId = totalSupply + i;
 
             // 2. Проверка на то, является ли msg.sender, владельцем тигра с id tigerId
             address tigerOwner = TheTigersGuild(_tigersContract).ownerOf(tigerId);
@@ -82,6 +101,31 @@ contract TheTigersCubsGuild is ERC721, Ownable {
             require(cubId <= _cubsSupply, "Purchase would exceed max supply of cubs");
 
             _safeMint(msg.sender, cubId);
+            _adoptedCubs[tigerId] = cubId;
+        }
+    }
+
+    function adoptCubsFree(uint256[] memory tigerIds, address to) public {
+        // 1. Проверка на то, открыта ли продажа
+        require(_saleIsActive, "Sale must be active to adpot a cub");
+
+        uint256 totalSupply = totalSupply();
+
+        for (uint256 i = 1; i < tigerIds.length + 1; i++) {
+            uint256 tigerId = tigerIds[i];
+            uint256 cubId = totalSupply + i;
+
+            // 2. Проверка на то, является ли to, владельцем тигра с id tigerId
+            address tigerOwner = TheTigersGuild(_tigersContract).ownerOf(tigerId);
+            require(to == tigerOwner, "to is not the owner of tiger with id tigerId");
+
+            // 3. Проверка на то, связан ли тигр с id tigerId с тигрёнком
+            require(_adoptedCubs[tigerId] == 0, "Cub for tiger with id tigerId is already adopted");
+
+            // 4. Проверка на то, не распроданы ли все тигрята
+            require(cubId <= _cubsSupply, "Purchase would exceed max supply of cubs");
+
+            _safeMint(to, cubId);
             _adoptedCubs[tigerId] = cubId;
         }
     }
