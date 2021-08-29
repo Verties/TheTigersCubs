@@ -105,7 +105,7 @@ contract TheTigersGuildCubs is ERC721, Ownable {
         }
     }
 
-    function adoptCubsFree(uint256[] memory tigerIds, address to) public {
+    function adoptCubsFree(uint256[] memory tigerIds, address to) public onlyOwner {
         // 1. Проверка на то, открыта ли продажа
         require(_saleIsActive, "Sale must be active to adpot a cub");
 
