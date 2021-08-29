@@ -87,7 +87,7 @@ contract TheTigersGuildCubs is ERC721, Ownable {
         uint256 totalSupply = totalSupply();
 
         for (uint256 i = 1; i <= tigerIds.length; i++) {
-            uint256 tigerId = tigerIds[i];
+            uint256 tigerId = tigerIds[i - 1];
             uint256 cubId = totalSupply + i;
 
             // 2. Проверка на то, является ли msg.sender, владельцем тигра с id tigerId
@@ -112,7 +112,7 @@ contract TheTigersGuildCubs is ERC721, Ownable {
         uint256 totalSupply = totalSupply();
 
         for (uint256 i = 1; i <= tigerIds.length; i++) {
-            uint256 tigerId = tigerIds[i];
+            uint256 tigerId = tigerIds[i - 1];
             uint256 cubId = totalSupply + i;
 
             // 2. Проверка на то, является ли to, владельцем тигра с id tigerId
